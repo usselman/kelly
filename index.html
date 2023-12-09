@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Kelly Criterion Calculator</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            margin-left: 25%;
+            margin-right: 25%;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #visualization {
+            margin: 0 auto;
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kelly Criterion Calculator</h1>
+    <p>The Kelly Criterion formula helps determine the optimal amount to bet based on your chance of winning and the
+        odds. It maximizes the expected logarithm of wealth (long-term growth of capital).</p>
+
+    <p>Enter your values. For example, if you have a 60% chance of winning (p = 0.6) and the odds are 2.0 (you win
+        double your bet), the formula calculates the fraction of your bankroll you should wager.</p>
+
+    <label for="probabilityWin">Probability of Win (p):</label>
+    <input type="number" id="probabilityWin" min="0" max="1" step="0.01" placeholder="e.g., 0.6"><br><br>
+
+    <label for="odds">Odds (b):</label>
+    <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br>
+
+    <button onclick="calculateKellyCriterion()">Calculate</button>
+
+    <h2>Result:</h2>
+    <p id="result"></p>
+    <p id="bankrollExample"></p>
+
+    <div id="visualization"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        let points = []; // Array to store multiple points
+
+        function calculateKellyCriterion() {
+            let p = parseFloat(document.getElementById('probabilityWin').value);
+            let b = parseFloat(document.getElementById('odds').value);
+            let q = 1 - p;
+            let fStar = p - (q / b);
+
+            document.getElementById('result').innerText = `Optimal fraction to bet: ${fStar.toFixed(2)}`;
+            document.getElementById('bankrollExample').innerText = `For a $1000 bankroll, bet $${(fStar * 1000).toFixed(2)}`;
+
+            points.push({ fStar, p, b }); // Store fStar along with p and b
+            if (points.length === 1) {
+                visualizeResult(); // Initialize visualization only once
+            } else {
+                updateGraph(); // Update graph with new points
+            }
+        }
+
+        let sketch; // Global variable to store the p5 sketch
+
+        function visualizeResult() {
+            sketch = new p5((s) => {
+                s.setup = () => {
+                    let canvas = s.createCanvas(400, 200);
+                    canvas.parent('visualization');
+                    s.background(255);
+                    drawGraph(s); // Draw the initial graph
+                };
+            }, 'visualization');
+        }
+
+        function updateGraph() {
+            sketch.background(255); // Clear the graph
+            drawGraph(sketch); // Redraw the graph with all points
+        }
+
+        function drawGraph(s) {
+            s.stroke(0);
+            s.line(20, 180, 380, 180); // x-axis
+            s.line(20, 180, 20, 20); // y-axis
+            s.textAlign(s.CENTER);
+            s.textSize(12);
+            s.text('Fraction of Bankroll to Bet', 200, 195);
+
+            // Plot the points
+            points.forEach((point, index) => {
+                let x = 20 + 360 * point.fStar;
+                s.fill(100, 200, 100);
+                s.ellipse(x, 100, 10, 10); // Plot on the same y-coordinate
+                s.textSize(10);
+                s.text(`p:${point.p}, b:${point.b}, f*:${point.fStar.toFixed(2)}`, x, 115 + index * 15); // Label each point
+            });
+        }
+
+    </script>
+</body>
+
+</html>
