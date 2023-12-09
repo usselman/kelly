@@ -41,7 +41,7 @@
     <label for="odds">Odds (b):</label>
     <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br>
 
-    <button onclick="calculateKellyCriterion()">Calculate</button>
+    <button id="calculateButton">Calculate</button>
 
     <h2>Result:</h2>
     <p id="result"></p>
@@ -51,60 +51,93 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script>
-        let points = []; // Array to store multiple points
+        let points = []; // Array to store the points to be plotted
 
-        function calculateKellyCriterion() {
+        function setup() {
+            let canvas = createCanvas(400, 200);
+            canvas.parent('visualization');
+            noLoop(); // Ensure that the draw loop does not continuously execute
+            background(255);
+            drawAxesAndCurve(); // Draw the axes and base curve
+        }
+
+        // Function to draw the axes and the base curve
+        function drawAxesAndCurve() {
+            // Draw the axes
+            stroke(0);
+            line(20, 180, 380, 180); // x-axis
+            line(20, 180, 20, 20);  // y-axis
+            textAlign(CENTER, CENTER);
+            textSize(12);
+            text('Amount Gained with a Win', 200, 195); // x-axis label
+            text('Fraction of Portfolio to Bet', 10, 100); // y-axis label
+
+            // Draw the base curve for the Kelly Criterion
+            drawKellyCurve();
+        }
+
+        // Function to draw the base Kelly Criterion curve
+        function drawKellyCurve() {
+            noFill();
+            stroke(255, 0, 0); // Red color for the curve
+            beginShape();
+            for (let i = 1; i <= 4; i += 0.05) { // Example range for b
+                let x = map(i, 1, 4, 20, 380); // x position based on b
+                let p = 0.5; // Example probability
+                let q = 1 - p;
+                let fStar = p - (q / i); // Calculate fStar for each point on the curve
+                let y = map(fStar, -1, 1, 180, 20); // y position based on fStar
+                vertex(x, y);
+            }
+            endShape();
+        }
+
+        // Function to calculate Kelly Criterion and plot the point
+        function calculateAndPlotKellyCriterion() {
             let p = parseFloat(document.getElementById('probabilityWin').value);
             let b = parseFloat(document.getElementById('odds').value);
             let q = 1 - p;
             let fStar = p - (q / b);
 
-            document.getElementById('result').innerText = `Optimal fraction to bet: ${fStar.toFixed(2)}`;
+            // Add point to the array
+            points.push({ b, fStar });
+
+            // Update the result display
+            document.getElementById('result').innerText = `With a ${p * 100}% chance of winning and odds of ${b} to 1, optimal fraction to bet: ${fStar.toFixed(2)}`;
             document.getElementById('bankrollExample').innerText = `For a $1000 bankroll, bet $${(fStar * 1000).toFixed(2)}`;
 
-            points.push({ fStar, p, b }); // Store fStar along with p and b
-            if (points.length === 1) {
-                visualizeResult(); // Initialize visualization only once
-            } else {
-                updateGraph(); // Update graph with new points
+            redraw(); // Redraw the canvas to show the new point
+        }
+
+        // p5.js draw function
+        function draw() {
+            // Redraw the base graph and all the points
+            background(255);
+            drawAxesAndCurve();
+            drawPoints();
+        }
+
+        // Function to draw all points
+        function drawPoints() {
+            for (let point of points) {
+                let x = map(point.b, 1, 4, 20, 380);
+                let y = map(point.fStar, -1, 1, 180, 20);
+
+                // Plot the calculated point
+                fill(0, 0, 255); // Blue color for the calculated point
+                ellipse(x, y, 10, 10);
+
+                // Label the point
+                fill(255, 0, 0);
+                noStroke();
+                textSize(10);
+                text(`(${point.b.toFixed(2)}, ${point.fStar.toFixed(2)})`, x + 10, y - 10);
             }
         }
 
-        let sketch; // Global variable to store the p5 sketch
+        // HTML button event listener
+        document.getElementById('calculateButton').addEventListener('click', calculateAndPlotKellyCriterion);
 
-        function visualizeResult() {
-            sketch = new p5((s) => {
-                s.setup = () => {
-                    let canvas = s.createCanvas(400, 200);
-                    canvas.parent('visualization');
-                    s.background(255);
-                    drawGraph(s); // Draw the initial graph
-                };
-            }, 'visualization');
-        }
-
-        function updateGraph() {
-            sketch.background(255); // Clear the graph
-            drawGraph(sketch); // Redraw the graph with all points
-        }
-
-        function drawGraph(s) {
-            s.stroke(0);
-            s.line(20, 180, 380, 180); // x-axis
-            s.line(20, 180, 20, 20); // y-axis
-            s.textAlign(s.CENTER);
-            s.textSize(12);
-            s.text('Fraction of Bankroll to Bet', 200, 195);
-
-            // Plot the points
-            points.forEach((point, index) => {
-                let x = 20 + 360 * point.fStar;
-                s.fill(100, 200, 100);
-                s.ellipse(x, 100, 10, 10); // Plot on the same y-coordinate
-                s.textSize(10);
-                s.text(`p:${point.p}, b:${point.b}, f*:${point.fStar.toFixed(2)}`, x, 115 + index * 15); // Label each point
-            });
-        }
 
     </script>
 </body>
