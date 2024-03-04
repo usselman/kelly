@@ -7,8 +7,8 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
-            margin-left: 25%;
-            margin-right: 25%;
+            margin-left: 15%;
+            margin-right: 15%;
         }
 
         h1 {
@@ -29,17 +29,97 @@
 
 <body>
     <h1>Kelly Criterion Calculator</h1>
-    <p>The Kelly Criterion formula helps determine the optimal amount to bet based on your chance of winning and the
-        odds. It maximizes the expected logarithm of wealth (long-term growth of capital).</p>
+    <h2>Understanding the Kelly Criterion for Investments</h2>
 
-    <p>Enter your values. For example, if you have a 60% chance of winning (p = 0.6) and the odds are 2.0 (you win
-        double your bet), the formula calculates the fraction of your bankroll you should wager.</p>
+    <p>The Kelly Criterion is a mathematical formula that can be applied to your investment strategy to determine the
+        optimal amount of money to allocate to each investment. Originally developed for gambling, it has been adapted
+        for the financial world to maximize the growth rate of your investment portfolio over the long term.</p>
 
-    <label for="probabilityWin">Probability of Win (p):</label>
+    <h3>Here's a step-by-step guide on how it works and how to use it:</h3>
+
+    <ol>
+        <li><strong>Understanding the Variables:</strong>
+            <ul>
+                <li><em>p (Probability of Increase):</em> This is the likelihood that your investment will increase in
+                    value. For instance, if you believe there's a 60% chance that a stock will go up, you would input
+                    0.6.</li>
+                <li><em>q (Probability of Decrease):</em> This is the likelihood that your investment will decrease in
+                    value. Typically, q is the complement of p, meaning q = 1 - p.</li>
+                <li><em>a (Fraction Lost):</em> This represents the percentage of your investment you would lose if the
+                    investment's value decreases. For example, if you could lose 10% of your investment's value, you
+                    would input 0.1.</li>
+                <li><em>b (Fraction Gained):</em> This is the percentage of your investment you would gain if the
+                    investment's value increases. If you expect to gain 10% on the investment, your input would be 0.1.
+                </li>
+            </ul>
+        </li>
+        <li><strong>The Formula:</strong>
+            <p>The general Kelly Criterion formula for investment is:</p>
+            <p><code>f* = (p/a) - (q/b)</code></p>
+            <p>where <code>f*</code> is the fraction of your total available capital that you should invest. A positive
+                value of <code>f*</code> indicates a potentially profitable investment, while a negative value suggests
+                that you should avoid it.</p>
+        </li>
+        <li><strong>How to Apply It:</strong>
+            <ul>
+                <li>First, evaluate the investment opportunity to estimate p, a, and b. It's crucial to be as accurate
+                    as possible in these estimates, though keep in mind that all investments carry uncertainty.</li>
+                <li>Input these values into the calculator.</li>
+                <li>The calculator will output the value of <code>f*</code>, which is the proportion of your assets you
+                    might consider allocating to this investment.</li>
+            </ul>
+        </li>
+        <li><strong>Interpreting the Results:</strong>
+            <ul>
+                <li>If <code>f*</code> is a small positive number, it suggests a conservative investment. You might
+                    allocate this fraction of your portfolio to the investment.</li>
+                <li>If <code>f*</code> is close to 1, the investment is predicted to be highly profitable, and you could
+                    allocate almost all of your capital to it.</li>
+                <li>If <code>f*</code> exceeds 1, this suggests using leverage (borrowing money to invest), but be
+                    cautious—this increases the potential risk significantly.</li>
+                <li>If <code>f*</code> is negative, you should not invest, as the expected outcome is a loss.</li>
+            </ul>
+        </li>
+        <li><strong>Practical Example:</strong>
+            <p>Imagine you have assessed an investment and concluded:</p>
+            <ul>
+                <li>There is a 55% chance the investment will increase in value (p = 0.55).</li>
+                <li>There is a 45% chance it will decrease (q = 0.45).</li>
+                <li>You could gain 10% if it increases (b = 0.1).</li>
+                <li>You could lose 10% if it decreases (a = 0.1).</li>
+            </ul>
+            <p>Entering these values into the Kelly Criterion formula would give you the optimal fraction of your
+                portfolio to invest in this opportunity.</p>
+        </li>
+        <li><strong>Caveats and Considerations:</strong>
+            <p>The Kelly Criterion assumes that you have accurate probabilities and outcome values, which is rarely the
+                case in investments. It also doesn't account for the investor's risk tolerance—some may not be
+                comfortable investing the full Kelly fraction.</p>
+            <p>Remember, the Kelly Criterion is a tool to guide your investment decisions, not a guarantee. Always
+                consider the broader context of your financial situation and risk tolerance before following its
+                suggestions.</p>
+        </li>
+    </ol>
+
+
+    <!-- <label for="probabilityWin">Probability of Win (p):</label>
     <input type="number" id="probabilityWin" min="0" max="1" step="0.01" placeholder="e.g., 0.6"><br><br>
 
     <label for="odds">Odds (b):</label>
-    <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br>
+    <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br> -->
+
+    <label for="probUp">Probability of Increase (p):</label>
+    <input type="number" id="probUp" min="0" max="1" step="0.01" placeholder="e.g., 0.55"><br><br>
+
+    <!-- <label for="probDown">Probability of Decrease (q):</label>
+    <input type="number" id="probDown" min="0" max="1" step="0.01" placeholder="e.g., 0.45"><br><br> -->
+
+    <label for="fractionGain">Fraction Gain (b):</label>
+    <input type="number" id="fractionGain" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
+
+    <label for="fractionLoss">Fraction Loss (a):</label>
+    <input type="number" id="fractionLoss" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
+
 
     <button id="calculateButton">Calculate</button>
 
@@ -91,22 +171,34 @@
             endShape();
         }
 
-        // Function to calculate Kelly Criterion and plot the point
-        function calculateAndPlotKellyCriterion() {
-            let p = parseFloat(document.getElementById('probabilityWin').value);
-            let b = parseFloat(document.getElementById('odds').value);
-            let q = 1 - p;
-            let fStar = p - (q / b);
+        // Function to calculate General Kelly Criterion for investment and plot the point
+        function calculateAndPlotKellyInvestment() {
+            let p = parseFloat(document.getElementById('probUp').value);     // Probability of the investment increasing
+            let q = 1 - p;  // Probability of the investment decreasing
+            let b = parseFloat(document.getElementById('fractionGain').value); // Fraction gained on a positive outcome
+            let a = parseFloat(document.getElementById('fractionLoss').value)  // Fraction lost on a negative outcome
+
+            // Calculate the Kelly fraction for investment
+            let fStar = (p / a) - (q / b);
 
             // Add point to the array
-            points.push({ b, fStar });
+            points.push({ b: b, a: a, fStar: fStar });
 
             // Update the result display
-            document.getElementById('result').innerText = `With a ${p * 100}% chance of winning and odds of ${b} to 1, optimal fraction to bet: ${fStar.toFixed(2)}`;
-            document.getElementById('bankrollExample').innerText = `For a $1000 bankroll, bet $${(fStar * 1000).toFixed(2)}`;
+            let resultText = `With a probability of increase of ${p * 100}%, decrease of ${q * 100}% `;
+            resultText += `and fractional changes of +${b * 100}%/-${a * 100}%, `;
+            resultText += `the optimal fraction of your portfolio to allocate is: ${fStar.toFixed(2)}.`;
+            document.getElementById('result').innerText = resultText;
+
+            let bankrollExampleText = `If the Kelly fraction is positive and less than 1, it suggests an advantageous investment opportunity. `;
+            bankrollExampleText += `For a Kelly fraction higher than 1, leverage might theoretically be used, but this increases risk significantly.`;
+            document.getElementById('bankrollExample').innerText = bankrollExampleText;
 
             redraw(); // Redraw the canvas to show the new point
         }
+
+        // Ensure you update the event listener for the correct button and function
+        document.getElementById('calculateButton').addEventListener('click', calculateAndPlotKellyInvestment);
 
         // p5.js draw function
         function draw() {
