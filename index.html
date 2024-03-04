@@ -7,8 +7,8 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
-            margin-left: 15%;
-            margin-right: 15%;
+            margin-left: 20%;
+            margin-right: 20%;
         }
 
         h1 {
@@ -29,11 +29,39 @@
 
 <body>
     <h1>Kelly Criterion Calculator</h1>
-    <h2>Understanding the Kelly Criterion for Investments</h2>
 
     <p>The Kelly Criterion is a mathematical formula that can be applied to your investment strategy to determine the
         optimal amount of money to allocate to each investment. Originally developed for gambling, it has been adapted
         for the financial world to maximize the growth rate of your investment portfolio over the long term.</p>
+
+
+
+
+    <!-- <label for="probabilityWin">Probability of Win (p):</label>
+    <input type="number" id="probabilityWin" min="0" max="1" step="0.01" placeholder="e.g., 0.6"><br><br>
+
+    <label for="odds">Odds (b):</label>
+    <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br> -->
+
+    <label for="probUp">Probability of Increase (p):</label>
+    <input type="number" id="probUp" min="0" max="1" step="0.01" placeholder="e.g., 0.55"><br><br>
+
+    <!-- <label for="probDown">Probability of Decrease (q):</label>
+    <input type="number" id="probDown" min="0" max="1" step="0.01" placeholder="e.g., 0.45"><br><br> -->
+
+    <label for="fractionGain">Fraction Gain (b):</label>
+    <input type="number" id="fractionGain" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
+
+    <label for="fractionLoss">Fraction Loss (a):</label>
+    <input type="number" id="fractionLoss" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
+
+
+    <button id="calculateButton">Calculate</button>
+
+    <div id="visualization"></div>
+    <h2>Result:</h2>
+    <p id="result"></p>
+    <p id="bankrollExample"></p>
 
     <h3>Here's a step-by-step guide on how it works and how to use it:</h3>
 
@@ -100,33 +128,6 @@
                 suggestions.</p>
         </li>
     </ol>
-
-
-    <!-- <label for="probabilityWin">Probability of Win (p):</label>
-    <input type="number" id="probabilityWin" min="0" max="1" step="0.01" placeholder="e.g., 0.6"><br><br>
-
-    <label for="odds">Odds (b):</label>
-    <input type="number" id="odds" min="1" step="0.01" placeholder="e.g., 2.0"><br><br> -->
-
-    <label for="probUp">Probability of Increase (p):</label>
-    <input type="number" id="probUp" min="0" max="1" step="0.01" placeholder="e.g., 0.55"><br><br>
-
-    <!-- <label for="probDown">Probability of Decrease (q):</label>
-    <input type="number" id="probDown" min="0" max="1" step="0.01" placeholder="e.g., 0.45"><br><br> -->
-
-    <label for="fractionGain">Fraction Gain (b):</label>
-    <input type="number" id="fractionGain" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
-
-    <label for="fractionLoss">Fraction Loss (a):</label>
-    <input type="number" id="fractionLoss" min="0" step="0.01" placeholder="e.g., 0.1"><br><br>
-
-
-    <button id="calculateButton">Calculate</button>
-
-    <div id="visualization"></div>
-    <h2>Result:</h2>
-    <p id="result"></p>
-    <p id="bankrollExample"></p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script>
